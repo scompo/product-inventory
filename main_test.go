@@ -172,3 +172,16 @@ func TestUpdateWithExistingElementSubtracting(t *testing.T) {
 		t.Errorf("quantity not correct")
 	}
 }
+
+func TestInventoryValue(t *testing.T) {
+	i := EmptyInventory()
+	p := NewProduct("p1", 10.00, 20)
+	p2 := NewProduct("p2", 10.00, 30)
+
+	i.Add(p)
+	i.Add(p2)
+
+	if i.Value() != 500.00 {
+		t.Errorf("wrong value")
+	}
+}

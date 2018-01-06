@@ -49,6 +49,15 @@ func (i Inventory) Status(id string) (*Product, error) {
 	return i.data[id], nil
 }
 
+// Returns the current value the Inventory.
+func (i Inventory) Value() float64 {
+	tot := 0.00
+	for _, v := range i.data {
+		tot = tot + v.Value()
+	}
+	return tot
+}
+
 // Adds a new Product.
 func (i *Inventory) Add(p *Product) (*Product, error) {
 	if i.Present(p.Id) {
