@@ -45,8 +45,6 @@ func TestAddWithExistingElement(t *testing.T) {
 	i.Add(p)
 	added := i.Add(p2)
 
-	fmt.Println(added)
-
 	if added.Id != "present" {
 		t.Errorf("id not correct")
 	}
@@ -54,6 +52,24 @@ func TestAddWithExistingElement(t *testing.T) {
 		t.Errorf("price not correct")
 	}
 	if added.Quantity != 30 {
+		t.Errorf("quantity not correct")
+	}
+}
+
+func TestAddWithExistingElementSubtracting(t *testing.T) {
+	i := EmptyInventory()
+	p := NewProduct("present", 10.00, 20)
+	p2 := NewProduct("present", 10.00, -20)
+	i.Add(p)
+	added := i.Add(p2)
+
+	if added.Id != "present" {
+		t.Errorf("id not correct")
+	}
+	if added.Price != 10.00 {
+		t.Errorf("price not correct")
+	}
+	if added.Quantity != 0 {
 		t.Errorf("quantity not correct")
 	}
 }
