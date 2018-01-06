@@ -2,6 +2,6 @@ package main
 
 import "testing"
 
-func TestSomething(t *testing.T){
+func TestSomething(t *testing.T) {
 	// should run?
 }
