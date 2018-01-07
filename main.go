@@ -20,12 +20,12 @@ const (
 type Product struct {
 	Id       string
 	Price    float64
-	Quantity int64
+	Quantity float64
 }
 
 // Returns the value of a Product.
 func (p Product) Value() float64 {
-	return p.Price * float64(p.Quantity)
+	return p.Price * p.Quantity
 }
 
 // An inventory of products.
@@ -39,7 +39,7 @@ func EmptyInventory() Inventory {
 }
 
 // Creates a new Product
-func NewProduct(id string, price float64, qt int64) *Product {
+func NewProduct(id string, price float64, qt float64) *Product {
 	p := new(Product)
 	p.Id = id
 	p.Price = price
@@ -135,7 +135,7 @@ func readProduct(rc *bufio.Scanner, id string) *Product {
 	fmt.Printf("Insert quantity: ")
 	rc.Scan()
 	temp = rc.Text()
-	qt, _ := strconv.ParseInt(temp, 10, 64)
+	qt, _ := strconv.ParseFloat(temp, 64)
 
 	return NewProduct(id, price, qt)
 }
