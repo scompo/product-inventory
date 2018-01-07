@@ -94,7 +94,7 @@ func (i *Inventory) Update(p *Product) (*Product, error) {
 func printStatus(p *Product) {
 	fmt.Printf("Product id: %s\n", p.Id)
 	fmt.Printf("Product price: %f\n", p.Price)
-	fmt.Printf("Product quantity: %d\n", p.Quantity)
+	fmt.Printf("Product quantity: %f\n", p.Quantity)
 	fmt.Printf("Product value: %f\n", p.Value())
 }
 
