@@ -1,2 +1,4 @@
 language: go
-  - 1.x
+
+go:
+  - tip
