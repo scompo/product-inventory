@@ -73,7 +73,7 @@ func (i Inventory) Value() float64 {
 // Adds a new Product.
 func (i *Inventory) Add(p *Product) (*Product, error) {
 	if i.Present(p.Id) {
-		return nil, errors.New("already present: " + p.Id)
+		return nil, errors.New("Already present: " + p.Id)
 	} else {
 		i.data[p.Id] = p
 	}
@@ -83,7 +83,7 @@ func (i *Inventory) Add(p *Product) (*Product, error) {
 // Updates the status of an existing Product.
 func (i *Inventory) Update(p *Product) (*Product, error) {
 	if !i.Present(p.Id) {
-		return nil, errors.New("missing product: " + p.Id)
+		return nil, errors.New("Missing product: " + p.Id)
 	} else {
 		i.data[p.Id].Price = p.Price
 		i.data[p.Id].Quantity = i.data[p.Id].Quantity + p.Quantity
@@ -127,17 +127,21 @@ func readProductId(rc *bufio.Scanner) string {
 func readProduct(rc *bufio.Scanner, id string) *Product {
 	var temp string
 
-	fmt.Printf("Insert Product price: ")
+	fmt.Printf("Insert price: ")
 	rc.Scan()
 	temp = rc.Text()
 	price, _ := strconv.ParseFloat(temp, 64)
 
-	fmt.Printf("Insert Product quantity: ")
+	fmt.Printf("Insert quantity: ")
 	rc.Scan()
 	temp = rc.Text()
 	qt, _ := strconv.ParseInt(temp, 10, 64)
 
 	return NewProduct(id, price, qt)
+}
+
+func printFunction(f string) {
+	fmt.Printf("Operation %s selected, executing...\n", f)
 }
 
 func main() {
@@ -154,6 +158,8 @@ func main() {
 
 		rc.Scan()
 		option = rc.Text()
+
+		printFunction(option)
 
 		if option == VALUE {
 			printValue(i)
@@ -181,7 +187,7 @@ func main() {
 		} else if option == UPDATE {
 			id := readProductId(rc)
 			if !i.Present(id) {
-				fmt.Printf("Product id already present: %s\n", id)
+				fmt.Printf("Missing product: %s\n", id)
 			} else {
 				p := readProduct(rc, id)
 				p2, err := i.Update(p)

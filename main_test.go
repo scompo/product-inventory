@@ -76,7 +76,7 @@ func TestAddExistingElement(t *testing.T) {
 
 	added, err := i.Add(p2)
 	if err != nil {
-		if err.Error() != "already present: present" {
+		if err.Error() != "Already present: present" {
 			t.Errorf("expected a descriptive error message")
 		}
 		if added != nil {
@@ -114,7 +114,7 @@ func TestUpdateElementNotPresent(t *testing.T) {
 	added, err := i.Update(p)
 
 	if err != nil {
-		if err.Error() != "missing product: not present" {
+		if err.Error() != "Missing product: not present" {
 			t.Errorf("expected a descriptive error message")
 		}
 		if added != nil {
