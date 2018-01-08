@@ -76,9 +76,8 @@ func (i Inventory) Value() float64 {
 func (i *Inventory) Add(p *Product) (*Product, error) {
 	if i.Present(p.Id) {
 		return nil, errors.New("Already present: " + p.Id)
-	} else {
-		i.data[p.Id] = p
 	}
+	i.data[p.Id] = p
 	return i.data[p.Id], nil
 }
 
@@ -87,10 +86,9 @@ func (i *Inventory) Add(p *Product) (*Product, error) {
 func (i *Inventory) Update(p *Product) (*Product, error) {
 	if !i.Present(p.Id) {
 		return nil, errors.New("Missing product: " + p.Id)
-	} else {
-		i.data[p.Id].Price = p.Price
-		i.data[p.Id].Quantity = i.data[p.Id].Quantity + p.Quantity
 	}
+	i.data[p.Id].Price = p.Price
+	i.data[p.Id].Quantity = i.data[p.Id].Quantity + p.Quantity
 	return i.data[p.Id], nil
 }
 
