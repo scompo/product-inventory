@@ -133,20 +133,20 @@ func Test(t *testing.T) {
 				})
 			})
 		})
-	})
+		
+		g.Describe("Value", func() {
+			g.It("Works as expected for an existing Product", func() {
+				i := EmptyInventory()
+				i.Add(NewProduct("p1", 1.00, 20))
+				i.Add(NewProduct("p2", 50.00, 0.5))
+				i.Add(NewProduct("p3", 3.00, 3))
 
-	g.Describe("Value", func() {
-		g.It("Works as expected for an existing Product", func() {
-			i := EmptyInventory()
-			i.Add(NewProduct("p1", 1.00, 20))
-			i.Add(NewProduct("p2", 50.00, 0.5))
-			i.Add(NewProduct("p3", 3.00, 3))
-
-			g.Assert(i.Value()).Equal(54.00)
-		})
-		g.It("Returns 0 for an empty Inventory", func() {
-			i := EmptyInventory()
-			g.Assert(i.Value()).Equal(0.00)
+				g.Assert(i.Value()).Equal(54.00)
+			})
+			g.It("Returns 0 for an empty Inventory", func() {
+				i := EmptyInventory()
+				g.Assert(i.Value()).Equal(0.00)
+			})
 		})
 	})
 }
