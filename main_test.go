@@ -17,9 +17,7 @@ func Test(t *testing.T) {
 	})
 
 	g.Describe("Inventory", func() {
-
 		g.Describe("Present", func() {
-
 			i := EmptyInventory()
 			i.Add(NewProduct("present", 10.00, 20))
 
@@ -32,151 +30,123 @@ func Test(t *testing.T) {
 		})
 
 		g.Describe("Status", func() {
-
 			i := EmptyInventory()
 			existent := NewProduct("present", 10.00, 20)
 			i.Add(existent)
 
 			g.Describe("Requesting an existent Product", func() {
+				r, err := i.Status(existent.ID)
+
 				g.It("Returns the correct Product", func() {
-					r, _ := i.Status(existent.ID)
 					g.Assert(r).Equal(existent)
 				})
 				g.It("Returns no errors", func() {
-					_, err := i.Status(existent.ID)
 					g.Assert(err).Equal(nil)
 				})
 			})
 
 			g.Describe("Requesting a non existent Product", func() {
+				r, err := i.Status("not existent")
+
 				g.It("Returns nil as Product", func() {
-					r, _ := i.Status("not existent")
 					g.Assert(r == nil).IsTrue()
 				})
 				g.It("Returns the correct error", func() {
-					_, err := i.Status("not existent")
 					g.Assert(err.Error()).Equal("missing product: not existent")
 				})
 			})
 		})
+
+		g.Describe("Add", func() {
+			i := EmptyInventory()
+			existent := NewProduct("present", 10.00, 20)
+			i.Add(existent)
+
+			g.Describe("Adding an existent Product", func() {
+				p2 := NewProduct("present", 10.00, 20)
+				r, err := i.Add(p2)
+
+				g.It("Returns an error", func() {
+					g.Assert(err.Error()).Equal("Already present: present")
+				})
+				g.It("Returns nil as status", func() {
+					g.Assert(r == nil).IsTrue()
+				})
+			})
+
+			g.Describe("Adding a non existent Product", func() {
+				p2 := NewProduct("another", 10.00, 20)
+				r, err := i.Add(p2)
+
+				g.It("Does not return an error", func() {
+					g.Assert(err == nil).IsTrue()
+				})
+				g.It("Returns the updated status of the added element", func() {
+					g.Assert(r).Equal(p2)
+				})
+				g.It("Does not return an error", func() {
+					g.Assert(err == nil).IsTrue()
+				})
+			})
+		})
+
+		g.Describe("Update", func() {
+			i := EmptyInventory()
+			existent := NewProduct("present", 10.00, 20)
+			i.Add(existent)
+
+			g.Describe("With an existent Product", func() {
+				p2 := NewProduct("present", 20.00, 20)
+				r, err := i.Update(p2)
+
+				g.It("Returns the correct Product ID", func() {
+					g.Assert(r.ID).Equal(existent.ID)
+				})
+				g.It("Returns the correct Product price", func() {
+					g.Assert(r.Price).Equal(p2.Price)
+				})
+				g.It("Returns the correct Product quantity", func() {
+					g.Assert(r.Quantity).Equal(40.00)
+				})
+				g.It("Returns no errors", func() {
+					g.Assert(err).Equal(nil)
+				})
+				g.It("Subtract a quantity if passed a negative number", func() {
+					r2, _ := i.Update(NewProduct("present", 20.00, -20))
+					g.Assert(r2.Quantity).Equal(20.00)
+				})
+				g.It("Works as well with floats", func() {
+					r2, _ := i.Update(NewProduct("present", 20.00, -0.5))
+					g.Assert(r2.Quantity).Equal(19.5)
+				})
+			})
+
+			g.Describe("With a non existent Product", func() {
+				p2 := NewProduct("not existent", 20.00, 20)
+				r, err := i.Update(p2)
+
+				g.It("Returns nil as Product", func() {
+					g.Assert(r == nil).IsTrue()
+				})
+				g.It("Returns the correct error", func() {
+					g.Assert(err.Error()).Equal("Missing product: not existent")
+				})
+			})
+		})
 	})
-}
 
-func TestAddExistingElement(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-	p2 := NewProduct("present", 10.00, 20)
+	g.Describe("Value", func() {
+		g.It("Works as expected for an existing Product", func() {
+			i := EmptyInventory()
+			i.Add(NewProduct("p1", 1.00, 20))
+			i.Add(NewProduct("p2", 50.00, 0.5))
+			i.Add(NewProduct("p3", 3.00, 3))
 
-	i.Add(p)
-
-	added, err := i.Add(p2)
-	if err != nil {
-		if err.Error() != "Already present: present" {
-			t.Errorf("expected a descriptive error message")
-		}
-		if added != nil {
-			t.Errorf("expected nil value")
-		}
-	} else {
-		t.Errorf("Expected an error")
-	}
-}
-
-func TestAddNotExistingElement(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-
-	added, err := i.Add(p)
-
-	if err != nil {
-		t.Errorf("Why an error?")
-	}
-	if added.ID != "present" {
-		t.Errorf("id not correct")
-	}
-	if added.Price != 10.00 {
-		t.Errorf("price not correct")
-	}
-	if added.Quantity != 20 {
-		t.Errorf("quantity not correct")
-	}
-}
-
-func TestUpdateElementNotPresent(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("not present", 10.00, 20)
-
-	added, err := i.Update(p)
-
-	if err != nil {
-		if err.Error() != "Missing product: not present" {
-			t.Errorf("expected a descriptive error message")
-		}
-		if added != nil {
-			t.Errorf("expected nil value")
-		}
-	} else {
-		t.Errorf("Expected an error")
-	}
-}
-
-func TestUpdateWithExistingElement(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-	p2 := NewProduct("present", 20.20, 10)
-
-	i.Add(p)
-
-	updated, err := i.Update(p2)
-
-	if err != nil {
-		t.Errorf("Why an error?")
-	}
-
-	if updated.ID != "present" {
-		t.Errorf("id not correct")
-	}
-	if updated.Price != 20.20 {
-		t.Errorf("price not correct")
-	}
-	if updated.Quantity != 30 {
-		t.Errorf("quantity not correct")
-	}
-}
-
-func TestUpdateWithExistingElementSubtracting(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-	p2 := NewProduct("present", 10.00, -20)
-
-	i.Add(p)
-
-	updated, err := i.Update(p2)
-
-	if err != nil {
-		t.Errorf("Why an error?")
-	}
-
-	if updated.ID != "present" {
-		t.Errorf("id not correct")
-	}
-	if updated.Price != 10.00 {
-		t.Errorf("price not correct")
-	}
-	if updated.Quantity != 0 {
-		t.Errorf("quantity not correct")
-	}
-}
-
-func TestInventoryValue(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("p1", 10.00, 20)
-	p2 := NewProduct("p2", 10.00, 30)
-
-	i.Add(p)
-	i.Add(p2)
-
-	if i.Value() != 500.00 {
-		t.Errorf("wrong value")
-	}
+			g.Assert(i.Value()).Equal(54.00)
+		})
+		g.It("Returns 0 for an empty Inventory", func() {
+			i := EmptyInventory()
+			g.Assert(i.Value()).Equal(0.00)
+		})
+	})
 }
