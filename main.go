@@ -16,18 +16,6 @@ const (
 	update = "update"
 )
 
-// Product in the inventory.
-type Product struct {
-	ID       string
-	Price    float64
-	Quantity float64
-}
-
-// Value returns the value of a Product (price * quantity).
-func (p Product) Value() float64 {
-	return p.Price * p.Quantity
-}
-
 // Inventory represents an inventory of products.
 type Inventory struct {
 	data map[string]*Product
@@ -36,15 +24,6 @@ type Inventory struct {
 // EmptyInventory creates an empty Inventory.
 func EmptyInventory() Inventory {
 	return Inventory{data: map[string]*Product{}}
-}
-
-// NewProduct creates a new Product.
-func NewProduct(id string, price float64, qt float64) *Product {
-	p := new(Product)
-	p.ID = id
-	p.Price = price
-	p.Quantity = qt
-	return p
 }
 
 // Present returns true if the id of the product is present, false otherwise.

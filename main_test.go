@@ -5,16 +5,8 @@ import (
 	"testing"
 )
 
-func Test(t *testing.T) {
+func TestMain(t *testing.T) {
 	g := Goblin(t)
-
-	g.Describe("Product", func() {
-		g.Describe("Value", func() {
-			g.It("Returns the correct value of a product", func() {
-				g.Assert(NewProduct("present", 10.00, 20).Value()).Equal(200.00)
-			})
-		})
-	})
 
 	g.Describe("Inventory", func() {
 		g.Describe("Present", func() {
@@ -133,7 +125,7 @@ func Test(t *testing.T) {
 				})
 			})
 		})
-		
+
 		g.Describe("Value", func() {
 			g.It("Works as expected for an existing Product", func() {
 				i := EmptyInventory()
