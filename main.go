@@ -47,7 +47,7 @@ func NewProduct(id string, price float64, qt float64) *Product {
 	return p
 }
 
-// Returns true if the id of the product is present, false otherwise.
+// Present returns true if the id of the product is present, false otherwise.
 func (i Inventory) Present(id string) bool {
 	_, present := i.data[id]
 	return present
