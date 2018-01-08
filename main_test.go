@@ -1,70 +1,65 @@
 package main
 
 import (
+	. "github.com/franela/goblin"
 	"testing"
 )
 
-func TestValue(t *testing.T) {
-	p := NewProduct("present", 10.00, 20)
-	if p.Value() != 200.00 {
-		t.Errorf("wrong value")
-	}
-}
+func Test(t *testing.T) {
+	g := Goblin(t)
 
-func TestPresentWithNewElement(t *testing.T) {
-	i := EmptyInventory()
-	present := i.Present("not present")
-	if present {
-		t.Errorf("present and should not!")
-	}
-}
+	g.Describe("Product", func() {
+		g.Describe("Value", func() {
+			g.It("Returns the correct value of a product", func() {
+				g.Assert(NewProduct("present", 10.00, 20).Value()).Equal(200.00)
+			})
+		})
+	})
 
-func TestStatusWithExistentElement(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-	i.Add(p)
+	g.Describe("Inventory", func() {
 
-	p, err := i.Status(p.ID)
+		g.Describe("Present", func() {
 
-	if err != nil {
-		t.Errorf("Why an error?")
-	}
+			i := EmptyInventory()
+			i.Add(NewProduct("present", 10.00, 20))
 
-	if p.ID != "present" {
-		t.Errorf("id not correct")
-	}
-	if p.Price != 10.00 {
-		t.Errorf("price not correct")
-	}
-	if p.Quantity != 20 {
-		t.Errorf("quantity not correct")
-	}
-}
+			g.It("Returns true for an existing Product", func() {
+				g.Assert(i.Present("present")).Equal(true)
+			})
+			g.It("Returns false for a non existing Product", func() {
+				g.Assert(i.Present("not present")).Equal(false)
+			})
+		})
 
-func TestStatusWithNonExistentElement(t *testing.T) {
-	i := EmptyInventory()
-	p, err := i.Status("not present")
+		g.Describe("Status", func() {
 
-	if err != nil {
-		if err.Error() != "missing product: not present" {
-			t.Errorf("expected a descriptive error message")
-		}
-		if p != nil {
-			t.Errorf("expected nil value")
-		}
-	} else {
-		t.Errorf("Expected an error")
-	}
-}
+			i := EmptyInventory()
+			existent := NewProduct("present", 10.00, 20)
+			i.Add(existent)
 
-func TestPresentWithExistingElement(t *testing.T) {
-	i := EmptyInventory()
-	p := NewProduct("present", 10.00, 20)
-	i.Add(p)
-	present := i.Present("present")
-	if !present {
-		t.Errorf("not present and should be!")
-	}
+			g.Describe("Requesting an existent Product", func() {
+				g.It("Returns the correct Product", func() {
+					r, _ := i.Status(existent.ID)
+					g.Assert(r).Equal(existent)
+				})
+				g.It("Returns no errors", func() {
+					_, err := i.Status(existent.ID)
+					g.Assert(err).Equal(nil)
+				})
+			})
+
+			g.Describe("Requesting a non existent Product", func() {
+				g.It("Returns nil as Product", func() {
+					r, _ := i.Status("not existent")
+					g.Assert(r == nil).IsTrue()
+				})
+				g.It("Returns the correct error", func() {
+					_, err := i.Status("not existent")
+					g.Assert(err.Error()).Equal("missing product: not existent")
+				})
+			})
+		})
+	})
 }
 
 func TestAddExistingElement(t *testing.T) {
