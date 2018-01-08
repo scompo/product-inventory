@@ -23,22 +23,22 @@ type Product struct {
 	Quantity float64
 }
 
-// Returns the value of a Product.
+// Value returns the value of a Product (price * quantity).
 func (p Product) Value() float64 {
 	return p.Price * p.Quantity
 }
 
-// An inventory of products.
+// Inventory represents an inventory of products.
 type Inventory struct {
 	data map[string]*Product
 }
 
-// Creates an empty Inventory
+// EmptyInventory creates an empty Inventory.
 func EmptyInventory() Inventory {
 	return Inventory{data: map[string]*Product{}}
 }
 
-// Creates a new Product
+// NewProduct creates a new Product.
 func NewProduct(id string, price float64, qt float64) *Product {
 	p := new(Product)
 	p.Id = id
@@ -53,7 +53,8 @@ func (i Inventory) Present(id string) bool {
 	return present
 }
 
-// Returns the current status of a Product if present, otherwise an error.
+// Status returns the current status of a Product if present.
+// If the the id of the product does not exist it returns an error.
 func (i Inventory) Status(id string) (*Product, error) {
 	if !i.Present(id) {
 		return nil, errors.New("missing product: " + id)
@@ -61,7 +62,7 @@ func (i Inventory) Status(id string) (*Product, error) {
 	return i.data[id], nil
 }
 
-// Returns the current value the Inventory.
+// Value returns the current value the Inventory.
 func (i Inventory) Value() float64 {
 	tot := 0.00
 	for _, v := range i.data {
@@ -70,7 +71,8 @@ func (i Inventory) Value() float64 {
 	return tot
 }
 
-// Adds a new Product.
+// Add adds a new Product to the Inventory.
+// If the product is already present it returns an error.
 func (i *Inventory) Add(p *Product) (*Product, error) {
 	if i.Present(p.Id) {
 		return nil, errors.New("Already present: " + p.Id)
@@ -80,7 +82,8 @@ func (i *Inventory) Add(p *Product) (*Product, error) {
 	return i.data[p.Id], nil
 }
 
-// Updates the status of an existing Product.
+// Update updates the status of an existing Product.
+// If the product is already present it returns an error.
 func (i *Inventory) Update(p *Product) (*Product, error) {
 	if !i.Present(p.Id) {
 		return nil, errors.New("Missing product: " + p.Id)
