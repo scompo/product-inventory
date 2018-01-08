@@ -18,7 +18,7 @@ const (
 
 // Product in the inventory.
 type Product struct {
-	Id       string
+	ID       string
 	Price    float64
 	Quantity float64
 }
@@ -41,7 +41,7 @@ func EmptyInventory() Inventory {
 // NewProduct creates a new Product.
 func NewProduct(id string, price float64, qt float64) *Product {
 	p := new(Product)
-	p.Id = id
+	p.ID = id
 	p.Price = price
 	p.Quantity = qt
 	return p
@@ -74,26 +74,26 @@ func (i Inventory) Value() float64 {
 // Add adds a new Product to the Inventory.
 // If the product is already present it returns an error.
 func (i *Inventory) Add(p *Product) (*Product, error) {
-	if i.Present(p.Id) {
-		return nil, errors.New("Already present: " + p.Id)
+	if i.Present(p.ID) {
+		return nil, errors.New("Already present: " + p.ID)
 	}
-	i.data[p.Id] = p
-	return i.data[p.Id], nil
+	i.data[p.ID] = p
+	return i.data[p.ID], nil
 }
 
 // Update updates the status of an existing Product.
 // If the product is already present it returns an error.
 func (i *Inventory) Update(p *Product) (*Product, error) {
-	if !i.Present(p.Id) {
-		return nil, errors.New("Missing product: " + p.Id)
+	if !i.Present(p.ID) {
+		return nil, errors.New("Missing product: " + p.ID)
 	}
-	i.data[p.Id].Price = p.Price
-	i.data[p.Id].Quantity = i.data[p.Id].Quantity + p.Quantity
-	return i.data[p.Id], nil
+	i.data[p.ID].Price = p.Price
+	i.data[p.ID].Quantity = i.data[p.ID].Quantity + p.Quantity
+	return i.data[p.ID], nil
 }
 
 func printStatus(p *Product) {
-	fmt.Printf("Product id: %s\n", p.Id)
+	fmt.Printf("Product id: %s\n", p.ID)
 	fmt.Printf("Product price: %f\n", p.Price)
 	fmt.Printf("Product quantity: %f\n", p.Quantity)
 	fmt.Printf("Product value: %f\n", p.Value())
@@ -119,7 +119,7 @@ func printValue(i Inventory) {
 	fmt.Printf("Inventory value: %.2f€\n", inventoryValue)
 }
 
-func readProductId(rc *bufio.Scanner) string {
+func readProductID(rc *bufio.Scanner) string {
 	fmt.Printf("Insert product id: ")
 	rc.Scan()
 	return rc.Text()
@@ -165,7 +165,7 @@ func main() {
 		if option == value {
 			printValue(i)
 		} else if option == status {
-			id := readProductId(rc)
+			id := readProductID(rc)
 			st, err := i.Status(id)
 			if err == nil {
 				printStatus(st)
@@ -173,7 +173,7 @@ func main() {
 				fmt.Printf("%s\n", err.Error())
 			}
 		} else if option == insert {
-			id := readProductId(rc)
+			id := readProductID(rc)
 			if i.Present(id) {
 				fmt.Printf("Product id already present: %s\n", id)
 			} else {
@@ -186,7 +186,7 @@ func main() {
 				}
 			}
 		} else if option == update {
-			id := readProductId(rc)
+			id := readProductID(rc)
 			if !i.Present(id) {
 				fmt.Printf("Missing product: %s\n", id)
 			} else {

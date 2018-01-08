@@ -24,13 +24,13 @@ func TestStatusWithExistentElement(t *testing.T) {
 	p := NewProduct("present", 10.00, 20)
 	i.Add(p)
 
-	p, err := i.Status(p.Id)
+	p, err := i.Status(p.ID)
 
 	if err != nil {
 		t.Errorf("Why an error?")
 	}
 
-	if p.Id != "present" {
+	if p.ID != "present" {
 		t.Errorf("id not correct")
 	}
 	if p.Price != 10.00 {
@@ -96,7 +96,7 @@ func TestAddNotExistingElement(t *testing.T) {
 	if err != nil {
 		t.Errorf("Why an error?")
 	}
-	if added.Id != "present" {
+	if added.ID != "present" {
 		t.Errorf("id not correct")
 	}
 	if added.Price != 10.00 {
@@ -138,7 +138,7 @@ func TestUpdateWithExistingElement(t *testing.T) {
 		t.Errorf("Why an error?")
 	}
 
-	if updated.Id != "present" {
+	if updated.ID != "present" {
 		t.Errorf("id not correct")
 	}
 	if updated.Price != 20.20 {
@@ -162,7 +162,7 @@ func TestUpdateWithExistingElementSubtracting(t *testing.T) {
 		t.Errorf("Why an error?")
 	}
 
-	if updated.Id != "present" {
+	if updated.ID != "present" {
 		t.Errorf("id not correct")
 	}
 	if updated.Price != 10.00 {
