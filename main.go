@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	QUIT   = "quit"
-	VALUE  = "value"
-	STATUS = "status"
-	INSERT = "insert"
-	UPDATE = "update"
+	quit   = "quit"
+	value  = "value"
+	status = "status"
+	insert = "insert"
+	update = "update"
 )
 
 // Product in the inventory.
@@ -100,11 +100,11 @@ func printStatus(p *Product) {
 
 func printMenu() {
 	fmt.Printf("Available operations:\n")
-	fmt.Printf("%s\tExits\n", QUIT)
-	fmt.Printf("%s\tPrints the inventory current value\n", VALUE)
-	fmt.Printf("%s\tReturns the status of a product\n", STATUS)
-	fmt.Printf("%s\tInserts a new product\n", INSERT)
-	fmt.Printf("%s\tUpdates an existing product\n", UPDATE)
+	fmt.Printf("%s\tExits\n", quit)
+	fmt.Printf("%s\tPrints the inventory current value\n", value)
+	fmt.Printf("%s\tReturns the status of a product\n", status)
+	fmt.Printf("%s\tInserts a new product\n", insert)
+	fmt.Printf("%s\tUpdates an existing product\n", update)
 }
 
 func printHeader() {
@@ -150,7 +150,7 @@ func main() {
 
 	var option string
 
-	for option != QUIT {
+	for option != quit {
 
 		printHeader()
 		printMenu()
@@ -161,9 +161,9 @@ func main() {
 
 		printFunction(option)
 
-		if option == VALUE {
+		if option == value {
 			printValue(i)
-		} else if option == STATUS {
+		} else if option == status {
 			id := readProductId(rc)
 			st, err := i.Status(id)
 			if err == nil {
@@ -171,7 +171,7 @@ func main() {
 			} else {
 				fmt.Printf("%s\n", err.Error())
 			}
-		} else if option == INSERT {
+		} else if option == insert {
 			id := readProductId(rc)
 			if i.Present(id) {
 				fmt.Printf("Product id already present: %s\n", id)
@@ -184,7 +184,7 @@ func main() {
 					printStatus(p2)
 				}
 			}
-		} else if option == UPDATE {
+		} else if option == update {
 			id := readProductId(rc)
 			if !i.Present(id) {
 				fmt.Printf("Missing product: %s\n", id)
@@ -197,7 +197,7 @@ func main() {
 					printStatus(p2)
 				}
 			}
-		} else if option == QUIT {
+		} else if option == quit {
 			fmt.Println("Exiting.")
 		} else {
 			fmt.Println("Operation not recognized.")
