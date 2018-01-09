@@ -1,4 +1,4 @@
-package main
+package api
 
 // Product in the inventory.
 type Product struct {

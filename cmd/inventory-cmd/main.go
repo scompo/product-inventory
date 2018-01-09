@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	. "github.com/scompo/product-inventory/api"
 )
 
 const (
