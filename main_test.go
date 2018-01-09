@@ -8,7 +8,9 @@ import (
 func TestMain(t *testing.T) {
 	g := Goblin(t)
 
-	g.Describe("The ui should", func() {
-		g.It("Do some stuff")
+	g.Describe("FormatCommandDescription", func() {
+		g.It("Works as expected", func() {
+			g.Assert(FormatCommandDescription("cmd", "desc")).Equal("cmd\tdesc")
+		})
 	})
 }

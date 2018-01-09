@@ -23,12 +23,17 @@ func printStatus(p *Product) {
 }
 
 func printMenu() {
-	fmt.Printf("Available operations:\n")
-	fmt.Printf("%s\tExits\n", quit)
-	fmt.Printf("%s\tPrints the inventory current value\n", value)
-	fmt.Printf("%s\tReturns the status of a product\n", status)
-	fmt.Printf("%s\tInserts a new product\n", insert)
-	fmt.Printf("%s\tUpdates an existing product\n", update)
+	fmt.Println("Available operations:")
+	fmt.Println(FormatCommandDescription(value, "Prints the inventory current value"))
+	fmt.Println(FormatCommandDescription(status, "Returns the status of a product"))
+	fmt.Println(FormatCommandDescription(insert, "Inserts a new product"))
+	fmt.Println(FormatCommandDescription(update, "Updates an existing product"))
+	fmt.Println(FormatCommandDescription(quit, "Exits the program"))
+}
+
+// FormatCommandDescription formats a command and a description correctly.
+func FormatCommandDescription(cmd string, description string) string {
+	return fmt.Sprintf("%s\t%s", cmd, description)
 }
 
 func printHeader() {
